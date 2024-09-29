@@ -1,0 +1,36 @@
+// translations.ts
+export const translations = {
+  en: {
+    pillbox: 'Pillbox',
+    medication: 'Medication',
+    microbit: 'Micro:bit',
+    settings: 'Settings',
+    pillboxSettings: 'Pillbox settings',
+    editMedication: 'Edit medication',
+    disconnected: 'Disconnected',
+    testConnection: 'Test connection',
+    connect: 'Connect',
+  },
+  es: {
+    pillbox: 'Pastillero',
+    medication: 'Medicamento',
+    microbit: 'Micro:bit',
+    settings: 'Ajustes',
+    pillboxSettings: 'Ajustes del pastillero',
+    editMedication: 'Editar medicamento',
+    disconnected: 'Desconectado',
+    testConnection: 'Probar conexión',
+    connect: 'Conectar',
+  },
+  ru: {
+    pillbox: 'Аптечка',
+    medication: 'Лекарства',
+    microbit: 'Micro:bit',
+    settings: 'Настройки',
+    pillboxSettings: 'Настройки аптечки',
+    editMedication: 'Редактировать лекарства',
+    disconnected: 'Отключено',
+    testConnection: 'Проверить соединение',
+    connect: 'Подключить',
+  },
+};
