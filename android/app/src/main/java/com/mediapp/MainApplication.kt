@@ -17,10 +17,7 @@ class MainApplication : Application(), ReactApplication {
     override val reactNativeHost: ReactNativeHost =
         object : DefaultReactNativeHost(this) {
             override fun getPackages(): List<ReactPackage> =
-                PackageList(this).packages.apply {
-                    // Add SplashScreenReactPackage manually since it's not autolinked
-                    add(SplashScreenReactPackage())
-                }
+                PackageList(this).packages
 
             override fun getJSMainModuleName(): String = "index"
 
