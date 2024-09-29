@@ -1,79 +1,95 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# MediApp
 
-# Getting Started
+**MediApp** is an educational project developed for "Laboratorio STEAM" to assist Alzheimer's patients in managing their medication schedules. Caregivers can input pill organizer properties, and the app will help remind patients when to take their medication, with notifications sent to a wearable micro:bit device.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Features
+- Caregiver inputs pill organizer layout.
+- Generates a PDF of pill organizer with labeled cells (e.g., A1, A2, B1, B2).
+- Caregiver schedules medications in the app.
+- Notifies patients when it’s time to take medication.
+- Sends reminders to micro:bit device (showing pillbox cell name and beeping).
+- Supports multiple languages (English, Spanish, Russian).
 
-## Step 1: Start the Metro Server
+## Installation
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/konrad-molitor/mediapp.git
+   cd mediapp
+   ```
 
-To start Metro, run the following command from the _root_ of your React Native project:
+2. Install dependencies:
+   ```bash
+   yarn install
+   ```
 
-```bash
-# using npm
-npm start
+3. Run the app:
+   ```bash
+   yarn android
+   ```
 
-# OR using Yarn
-yarn start
-```
+## Technologies Used
+- **React Native** for mobile development.
+- **micro:bit** for notifications.
+- **AsyncStorage** for persisting language preferences.
+- **React Navigation** for navigation.
+- **Day.js** for date manipulation.
+- **FontAwesome** for icons.
 
-## Step 2: Start your Application
+## Language Support
+This app supports three languages:
+- English
+- Español
+- Русский
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+## License
+This project is licensed under the MIT License.
 
-### For Android
+---
 
-```bash
-# using npm
-npm run android
+# MediApp (Español)
 
-# OR using Yarn
-yarn android
-```
+**MediApp** es un proyecto educativo desarrollado para "Laboratorio STEAM" con el objetivo de ayudar a los pacientes con Alzheimer a gestionar sus horarios de medicación. Los cuidadores pueden ingresar las propiedades del organizador de pastillas, y la aplicación recordará a los pacientes cuándo tomar su medicación, enviando notificaciones a un dispositivo portátil micro:bit.
 
-### For iOS
+## Características
+- El cuidador ingresa la disposición del organizador de pastillas.
+- Genera un archivo PDF del organizador de pastillas con celdas etiquetadas (por ejemplo, A1, A2, B1, B2).
+- El cuidador programa las medicinas en la aplicación.
+- Notifica a los pacientes cuándo deben tomar su medicación.
+- Envía recordatorios al dispositivo micro:bit (mostrando el nombre de la celda y emitiendo un sonido).
+- Soporte multilingüe (inglés, español, ruso).
 
-```bash
-# using npm
-npm run ios
+## Instalación
 
-# OR using Yarn
-yarn ios
-```
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/konrad-molitor/mediapp.git
+   cd mediapp
+   ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+2. Instala las dependencias:
+   ```bash
+   yarn install
+   ```
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+3. Ejecuta la aplicación:
+   ```bash
+   yarn android
+   ```
 
-## Step 3: Modifying your App
+## Tecnologías Utilizadas
+- **React Native** para desarrollo móvil.
+- **micro:bit** para notificaciones.
+- **AsyncStorage** para la persistencia de preferencias de idioma.
+- **React Navigation** para la navegación.
+- **Day.js** para la manipulación de fechas.
+- **FontAwesome** para los íconos.
 
-Now that you have successfully run the app, let's modify it.
+## Soporte de Idiomas
+Esta aplicación soporta tres idiomas:
+- Inglés
+- Español
+- Ruso
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## Licencia
+Este proyecto está licenciado bajo la Licencia MIT.
