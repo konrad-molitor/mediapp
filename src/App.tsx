@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  TouchableOpacity,
-} from 'react-native';
-
+import { TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -11,6 +8,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { LanguageProvider } from './LanguageContext';
 import SettingsScreen from './SettingsScreen';
 import { MainScreen } from './components/MainScreen/MainScreen';
+import { PillboxConfigScreen } from './components/PillboxConfigScreen/PillboxConfigScreen'; // Import Pillbox screen
 import { SidePanel } from './components/Drawer/SidePanel';
 
 const Drawer = createDrawerNavigator();
@@ -19,6 +17,7 @@ const Stack = createStackNavigator();
 function AppStack({ navigation }) {
   return (
     <Stack.Navigator>
+      {/* Main screen */}
       <Stack.Screen
         name="Main"
         component={MainScreen}
@@ -36,6 +35,22 @@ function AppStack({ navigation }) {
               <FontAwesomeIcon icon={faBars} size={20} color="#fff" />
             </TouchableOpacity>
           ),
+        }}
+      />
+
+      {/* PillboxConfigScreen */}
+      <Stack.Screen
+        name="PillboxConfigScreen"
+        component={PillboxConfigScreen}
+        options={{
+          title: 'Pillbox Configuration',
+          headerStyle: {
+            backgroundColor: '#001f3f',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
         }}
       />
     </Stack.Navigator>
