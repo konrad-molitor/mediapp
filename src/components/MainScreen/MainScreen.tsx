@@ -5,8 +5,9 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import {useBluetooth} from '../../BluetoothManager.ts';
 import {styles} from './MainScreenStyles.ts';
 import DeviceSelectionModal from '../DeviceSelectionModal/DeviceSelectionModal.tsx';
+import { pillboxConfigScreenName } from '../PillboxConfigScreen/PillboxConfigScreen.tsx';
 
-export function MainScreen() {
+export function MainScreen({ navigation }) {
   const {translations} = useLanguage();
   const {
     scanForDevices,
@@ -28,7 +29,10 @@ export function MainScreen() {
       <View style={styles.card}>
         <Text style={styles.cardTitle}>{translations.pillbox}</Text>
         <View style={styles.redRectangle} />
-        <TouchableOpacity style={styles.fitContentButton}>
+        <TouchableOpacity
+          style={styles.fitContentButton}
+          onPress={() => navigation.navigate(pillboxConfigScreenName)}
+        >
           <Text style={styles.buttonText}>{translations.pillboxSettings}</Text>
         </TouchableOpacity>
       </View>
