@@ -5,11 +5,12 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { LanguageProvider } from './LanguageContext';
-import SettingsScreen from './SettingsScreen';
+import { LanguageProvider } from './context/LanguageContext.tsx';
+import SettingsScreen from './components/SettingsScreen.tsx';
 import { MainScreen } from './components/MainScreen/MainScreen';
 import { PillboxConfigScreen } from './components/PillboxConfigScreen/PillboxConfigScreen'; // Import Pillbox screen
 import { SidePanel } from './components/Drawer/SidePanel';
+import {PillboxProvider} from './context/PillboxContext.tsx';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -74,9 +75,11 @@ function DrawerScreen() {
 export default function App() {
   return (
     <LanguageProvider>
-      <NavigationContainer>
-        <DrawerScreen />
-      </NavigationContainer>
+      <PillboxProvider>
+        <NavigationContainer>
+         <DrawerScreen />
+        </NavigationContainer>
+      </PillboxProvider>
     </LanguageProvider>
   );
 }

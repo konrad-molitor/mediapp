@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
@@ -88,5 +88,16 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end', // Align buttons to the right
     marginTop: 10,
+  },
+  pillboxPreviewContainer: {
+    alignItems: 'stretch', // Center the preview
+    marginBottom: 20,
+    width: '100%', // Take the full width of the parent
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center', // Center the grid within the container
+    width: '100%', // Ensure the grid takes the full width
   },
 });

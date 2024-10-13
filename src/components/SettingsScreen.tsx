@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../context/LanguageContext.tsx';
 import { Picker } from '@react-native-picker/picker'; // Using Picker for the dropdown
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'; // Icon for back button

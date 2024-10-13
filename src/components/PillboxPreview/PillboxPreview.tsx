@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, Dimensions } from 'react-native';
+import {View, Text, TouchableOpacity, Modal, Dimensions, LayoutChangeEvent} from 'react-native';
 import { styles } from './PillboxPreviewStyles';
 import { Pillbox } from '../../entities/Pillbox.entity'; // Assuming Pillbox and PBCell are imported
 
@@ -19,8 +19,12 @@ interface PillboxPreviewProps {
 
 export function PillboxPreview({ pillbox }: PillboxPreviewProps) {
   const [selectedCellLabel, setSelectedCellLabel] = useState<string | null>(null);
-  const screenWidth = Dimensions.get('window').width;
-  const previewWidth = screenWidth * 0.85;
+  const [previewWidth, setPreviewWidth] = useState(0);
+
+  const onLayout = (event: LayoutChangeEvent) => {
+    const { width } = event.nativeEvent.layout;
+    setPreviewWidth(width * 0.9);
+  };
 
   if (!pillbox || !pillbox.cells || !pillbox.rows || !pillbox.cols) {
     return (
@@ -35,10 +39,10 @@ export function PillboxPreview({ pillbox }: PillboxPreviewProps) {
   const availableWidth = previewWidth - rowLabelWidth; // Use entire available width
   const maxCellWidth = Math.min(availableWidth / pillbox.cols - 5, 60); // Adjust cell width to fit
 
-  const showCellLabels = maxCellWidth > 40; // Show labels only if width allows enough space
+  const showCellLabels = maxCellWidth > 30; // Show labels only if width allows enough space
 
   return (
-    <View style={[styles.gridContainer]}>
+    <View style={[styles.gridContainer]} onLayout={onLayout}>
       {Array.from({ length: pillbox.rows }, (_, rowIndex) => (
         <View key={rowIndex} style={styles.row}>
           {/* Row labels */}
