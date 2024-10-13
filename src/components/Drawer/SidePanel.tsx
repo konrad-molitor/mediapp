@@ -1,4 +1,4 @@
-import {useLanguage} from '../../LanguageContext.tsx';
+import {useLanguage} from '../../context/LanguageContext.tsx';
 import {Text, View} from 'react-native';
 import {faCog, faMedkit, faPills} from '@fortawesome/free-solid-svg-icons';
 import {faBluetooth} from '@fortawesome/free-brands-svg-icons';

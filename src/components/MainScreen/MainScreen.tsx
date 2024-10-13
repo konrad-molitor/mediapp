@@ -1,11 +1,15 @@
-import {useLanguage} from '../../LanguageContext.tsx';
-import React, {useEffect, useState} from 'react';
+import {useLanguage} from '../../context/LanguageContext.tsx';
+import React, {useContext, useEffect, useState} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {useBluetooth} from '../../BluetoothManager.ts';
 import {styles} from './MainScreenStyles.ts';
 import DeviceSelectionModal from '../DeviceSelectionModal/DeviceSelectionModal.tsx';
 import { pillboxConfigScreenName } from '../PillboxConfigScreen/PillboxConfigScreen.tsx';
+import { PillboxPreview } from '../PillboxPreview/PillboxPreview'; // Import PillboxPreview
+import { Pillbox } from '../../entities/Pillbox.entity';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {PillboxContext} from '../../context/PillboxContext.tsx'; // Assuming the pillbox structure is imported
 
 export function MainScreen({ navigation }) {
   const {translations} = useLanguage();
@@ -17,8 +21,10 @@ export function MainScreen({ navigation }) {
     sendTestMessage,
     connectedDevice,
   } = useBluetooth();
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(null);
+  const { pillbox } = useContext(PillboxContext);
 
   useEffect(() => {
     SplashScreen.hide();
@@ -28,7 +34,12 @@ export function MainScreen({ navigation }) {
     <View style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.cardTitle}>{translations.pillbox}</Text>
-        <View style={styles.redRectangle} />
+
+        {/* Pillbox preview container */}
+        <View style={styles.pillboxPreviewContainer}>
+          <PillboxPreview pillbox={pillbox} />
+        </View>
+
         <TouchableOpacity
           style={styles.fitContentButton}
           onPress={() => navigation.navigate(pillboxConfigScreenName)}

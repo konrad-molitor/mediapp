@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { translations } from './translations';
+import { translations } from '../translations.ts';
 
 // Define types for the context and translations
 export type Translations = {
