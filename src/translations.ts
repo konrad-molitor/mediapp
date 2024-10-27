@@ -39,6 +39,10 @@ export const translations = {
     downloadLabelsPdf: 'Download Labels PDF',
     mediApp: 'MediApp',
     medicationManagement: 'Medication Management',
+    assign: 'Assign',
+    assignCellsTo: 'Assign Cells to',
+    assignedCells: 'Assigned Cells',
+    noCellsAssigned: 'No cells assigned',
   },
   es: {
     pillbox: 'Pastillero',
@@ -80,6 +84,10 @@ export const translations = {
     downloadLabelsPdf: 'Descargar etiquetas en PDF',
     mediApp: 'MediApp',
     medicationManagement: 'Gestión de medicamentos',
+    assign: 'Asignar',
+    assignCellsTo: 'Asignar celdas a',
+    assignedCells: 'Celdas asignadas',
+    noCellsAssigned: 'No hay celdas asignadas',
   },
   ru: {
     pillbox: 'Аптечка',
@@ -121,5 +129,9 @@ export const translations = {
     downloadLabelsPdf: 'Скачать PDF с этикетками',
     mediApp: 'MediApp',
     medicationManagement: 'Управление лекарствами',
+    assign: 'Назначить',
+    assignCellsTo: 'Назначить ячейки для',
+    assignedCells: 'Назначенные ячейки',
+    noCellsAssigned: 'Нет назначенных ячеек',
   },
 };

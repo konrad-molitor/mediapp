@@ -23,7 +23,7 @@ import { createPdfAndShare } from '../../helpers/PDFHelper';
 import { useLanguage } from '../../context/LanguageContext'; // Import useLanguage
 
 export function PillboxConfigScreen({ navigation }) {
-  const { pillbox: savedPillbox, savePillbox } = useContext(PillboxContext); // Get savePillbox function from context
+  const { pillbox: savedPillbox, setPillbox: savePillbox } = useContext(PillboxContext); // Get savePillbox function from context
   const [rows, setRows] = useState(1); // Default to 1 row
   const [cellsPerRow, setCellsPerRow] = useState(7); // Default to 7 cells per row
   const [pillbox, setPillbox] = useState<Pillbox | null>(null);
@@ -80,24 +80,7 @@ export function PillboxConfigScreen({ navigation }) {
 
   // Generate the pillbox based on rows and columns
   const generatePillbox = (rows: number, cols: number): Pillbox => {
-    const cells: PBCell[] = [];
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols; col++) {
-        const cellLabel = String.fromCharCode(65 + row) + (col + 1); // A1, B2, etc.
-        cells.push({
-          position: {
-            row,
-            col,
-            rowLabel: String.fromCharCode(65 + row),
-            colLabel: `${col + 1}`,
-          },
-          label: cellLabel,
-          medication: null, // No medication by default
-          state: PBCellState.NotUsed, // Default state is NotUsed
-        });
-      }
-    }
-    return { rows, cols, cells, createdAt: new Date(), updatedAt: new Date() };
+    return new Pillbox(rows, cols);
   };
 
   return (

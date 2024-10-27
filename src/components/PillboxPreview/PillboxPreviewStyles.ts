@@ -71,4 +71,19 @@ export const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
+  // cell: {
+  //   marginHorizontal: 2,
+  //   borderRadius: 3,
+  //   borderWidth: 1,
+  //   borderColor: '#fff',
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
+  selectedCell: {
+    borderColor: '#0000ff',
+    borderWidth: 2,
+  },
+  assignedCell: {
+    backgroundColor: '#d4edda', // Light green
+  },
 });

@@ -8,13 +8,16 @@ export class Pillbox {
   createdAt: Date;
   updatedAt: Date;
 
-  private constructor(rows: number, cols: number) {
+  constructor(rows: number, cols: number, cells?: PBCell[], createdAt?: Date, updatedAt?: Date) {
     this.rows = rows;
     this.cols = cols;
-    this.cells = [];
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
-    this.initCells();
+    this.cells = cells || [];
+    this.createdAt = createdAt || new Date();
+    this.updatedAt = updatedAt || new Date();
+
+    if (this.cells.length === 0) {
+      this.initCells();
+    }
   }
 
   public static getInstance(rows: number, cols: number): Pillbox {
@@ -62,5 +65,36 @@ export class Pillbox {
       cell.state = PBCellState.NotUsed;
       this.updatedAt = new Date();
     }
+  }
+
+  public static fromJSON(json: any): Pillbox {
+    const cells = json.cells.map((cellJson: Object) => PBCell.fromJSON(cellJson));
+    return new Pillbox(
+      json.rows,
+      json.cols,
+      cells,
+      new Date(json.createdAt),
+      new Date(json.updatedAt)
+    );
+  }
+
+  public toJSON(): any {
+    return {
+      rows: this.rows,
+      cols: this.cols,
+      cells: this.cells.map((cell) => cell.toJSON()),
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
+  }
+
+  public clone(updatedProperties?: Partial<Pillbox>): Pillbox {
+    return new Pillbox(
+      updatedProperties?.rows || this.rows,
+      updatedProperties?.cols || this.cols,
+      updatedProperties?.cells || this.cells.map((cell) => cell.clone()),
+      updatedProperties?.createdAt || this.createdAt,
+      updatedProperties?.updatedAt || this.updatedAt
+    );
   }
 }

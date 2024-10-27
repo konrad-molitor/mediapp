@@ -1,18 +1,30 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { Pillbox } from '../entities/Pillbox.entity';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const PillboxContext = createContext();
+interface PillboxContextProps {
+  pillbox: Pillbox | null;
+  setPillbox: React.Dispatch<React.SetStateAction<Pillbox | null>>;
+}
 
-export const PillboxProvider = ({ children }) => {
-  const [pillbox, setPillbox] = useState(null);
+export const PillboxContext = createContext<PillboxContextProps>({
+  pillbox: null,
+  setPillbox: () => {},
+});
 
-  // Load pillbox from AsyncStorage on app startup
+export const PillboxProvider: React.FC = ({ children }) => {
+  const [pillbox, setPillbox] = useState<Pillbox | null>(null);
+
   useEffect(() => {
+    // Load pillbox from AsyncStorage when the app starts
     const loadPillbox = async () => {
       try {
         const savedPillbox = await AsyncStorage.getItem('pillbox');
         if (savedPillbox) {
-          setPillbox(JSON.parse(savedPillbox));
+          const pillboxData = JSON.parse(savedPillbox);
+          // Deserialize dates and other necessary fields
+          const loadedPillbox = Pillbox.fromJSON(pillboxData);
+          setPillbox(loadedPillbox);
         }
       } catch (error) {
         console.error('Failed to load pillbox from storage:', error);
@@ -22,18 +34,24 @@ export const PillboxProvider = ({ children }) => {
     loadPillbox();
   }, []);
 
-  // Save pillbox to AsyncStorage whenever it's updated
-  const savePillbox = async (newPillbox) => {
-    try {
-      setPillbox(newPillbox);
-      await AsyncStorage.setItem('pillbox', JSON.stringify(newPillbox));
-    } catch (error) {
-      console.error('Failed to save pillbox to storage:', error);
-    }
-  };
+  useEffect(() => {
+    // Save pillbox to AsyncStorage whenever it changes
+    const savePillboxToStorage = async () => {
+      try {
+        if (pillbox) {
+          const pillboxData = pillbox.toJSON();
+          await AsyncStorage.setItem('pillbox', JSON.stringify(pillboxData));
+        }
+      } catch (error) {
+        console.error('Failed to save pillbox to storage:', error);
+      }
+    };
+
+    savePillboxToStorage();
+  }, [pillbox]);
 
   return (
-    <PillboxContext.Provider value={{ pillbox, setPillbox, savePillbox }}>
+    <PillboxContext.Provider value={{ pillbox, setPillbox }}>
       {children}
     </PillboxContext.Provider>
   );

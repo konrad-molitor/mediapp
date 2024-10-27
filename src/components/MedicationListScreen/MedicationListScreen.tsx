@@ -9,16 +9,20 @@ import {
   faTrash,
   faEdit,
   faChevronDown,
-  faChevronUp,
+  faChevronUp, faClipboard,
 } from '@fortawesome/free-solid-svg-icons';
 import AddMedicationScreen from '../AddMedicationScreen/AddMedicationScreen';
 import { useLanguage } from '../../context/LanguageContext';
+import AssignMedicationModal from '../AssignMedicationModal/AssignMedicationModal';
 
 export function MedicationListScreen({ navigation }) {
   const { medications, setMedications } = useContext(MedicationContext);
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [medicationToEdit, setMedicationToEdit] = useState<Medication | null>(null);
+  const [isAssignModalVisible, setIsAssignModalVisible] = useState<boolean>(false);
+  const [medicationToAssign, setMedicationToAssign] = useState<Medication | null>(null);
+
 
   const { language, translations } = useLanguage(); // Get current language and translations
 
@@ -67,6 +71,14 @@ export function MedicationListScreen({ navigation }) {
     ));
   };
 
+  const handleAssignMedication = (medicationId: string) => {
+    const med = medications.find((m) => m.id === medicationId);
+    if (med) {
+      setMedicationToAssign(med);
+      setIsAssignModalVisible(true);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -90,6 +102,13 @@ export function MedicationListScreen({ navigation }) {
                 {renderTimes(medication)}
                 {expandedCard === medication.id && (
                   <View style={styles.actionButtonsContainer}>
+                    <TouchableOpacity
+                      style={[styles.fullWidthButton, styles.assignButton]}
+                      onPress={() => handleAssignMedication(medication.id)}
+                    >
+                      <FontAwesomeIcon icon={faClipboard} size={16} color="#fff" />
+                      <Text style={styles.buttonText}>{translations.assign}</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.fullWidthButton}
                       onPress={() => handleEditMedication(medication.id)}
@@ -138,6 +157,14 @@ export function MedicationListScreen({ navigation }) {
         }}
         medication={medicationToEdit}
       />
+      {/* Assign Medication Modal */}
+      {medicationToAssign && (
+        <AssignMedicationModal
+          visible={isAssignModalVisible}
+          onClose={() => setIsAssignModalVisible(false)}
+          medication={medicationToAssign}
+        />
+      )}
     </View>
   );
 }
