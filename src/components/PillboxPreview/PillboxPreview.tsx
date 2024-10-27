@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import {View, Text, TouchableOpacity, Modal, Dimensions, LayoutChangeEvent} from 'react-native';
+import { View, Text, TouchableOpacity, Modal, LayoutChangeEvent } from 'react-native';
 import { styles } from './PillboxPreviewStyles';
-import { Pillbox } from '../../entities/Pillbox.entity'; // Assuming Pillbox and PBCell are imported
+import { Pillbox } from '../../entities/Pillbox.entity';
+import { PBCell } from '../../entities/PBCell.entity';
 
 // Define an enum for the cell colors
 enum CellColors {
@@ -15,9 +16,17 @@ enum CellColors {
 
 interface PillboxPreviewProps {
   pillbox: Pillbox | null;
+  selectedCells?: string[];
+  onCellPress?: (cellId: string) => void;
+  medicationId?: string;
 }
 
-export function PillboxPreview({ pillbox }: PillboxPreviewProps) {
+export function PillboxPreview({
+                                 pillbox,
+                                 selectedCells = [],
+                                 onCellPress,
+                                 medicationId,
+                               }: PillboxPreviewProps) {
   const [selectedCellLabel, setSelectedCellLabel] = useState<string | null>(null);
   const [previewWidth, setPreviewWidth] = useState(0);
 
@@ -35,45 +44,55 @@ export function PillboxPreview({ pillbox }: PillboxPreviewProps) {
   }
 
   const hasRowLabels = pillbox.rows > 1;
-  const rowLabelWidth = hasRowLabels ? 11 : 0; // Estimate row label width
-  const availableWidth = previewWidth - rowLabelWidth; // Use entire available width
-  const maxCellWidth = Math.min(availableWidth / pillbox.cols - 5, 60); // Adjust cell width to fit
+  const rowLabelWidth = hasRowLabels ? 11 : 0;
+  const availableWidth = previewWidth - rowLabelWidth;
+  const maxCellWidth = Math.min(availableWidth / pillbox.cols - 5, 60);
+  const showCellLabels = maxCellWidth > 30;
 
-  const showCellLabels = maxCellWidth > 30; // Show labels only if width allows enough space
+  const renderCell = (cell: PBCell) => {
+    const isSelected = selectedCells.includes(cell.id);
+    const isAssignedToMedication = cell.medicationId === medicationId;
+
+    const cellStyle = [
+      styles.cell,
+      {
+        backgroundColor: CellColors[cell.state],
+        width: maxCellWidth,
+        height: maxCellWidth,
+      },
+      isSelected && styles.selectedCell,
+      isAssignedToMedication && styles.assignedCell,
+    ];
+
+    return (
+      <TouchableOpacity
+        key={cell.id}
+        style={cellStyle}
+        onPress={() => {
+          if (onCellPress) {
+            onCellPress(cell.id);
+          } else if (!showCellLabels) {
+            setSelectedCellLabel(cell.label);
+          }
+        }}
+      >
+        {showCellLabels && <Text style={styles.cellText}>{cell.label}</Text>}
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={[styles.gridContainer]} onLayout={onLayout}>
       {Array.from({ length: pillbox.rows }, (_, rowIndex) => (
         <View key={rowIndex} style={styles.row}>
-          {/* Row labels */}
           {hasRowLabels && !showCellLabels && (
             <Text style={[styles.rowLabel, { width: rowLabelWidth }]}>
               {String.fromCharCode(65 + rowIndex)}
             </Text>
           )}
-          {/* Display cells */}
           {pillbox.cells
-            .filter(cell => cell.position.row === rowIndex)
-            .map((cell, colIndex) => (
-              <TouchableOpacity
-                key={colIndex}
-                style={[
-                  styles.cell,
-                  {
-                    backgroundColor: CellColors[cell.state], // Use enum for colors
-                    width: maxCellWidth,
-                    height: maxCellWidth,
-                  },
-                ]}
-                onPress={() => !showCellLabels && setSelectedCellLabel(cell.label)} // Modal for hidden labels
-              >
-                {showCellLabels && (
-                  <Text style={styles.cellText}>
-                    {cell.label}
-                  </Text>
-                )}
-              </TouchableOpacity>
-            ))}
+            .filter((cell) => cell.position.row === rowIndex)
+            .map((cell) => renderCell(cell))}
         </View>
       ))}
 

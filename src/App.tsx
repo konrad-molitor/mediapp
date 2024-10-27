@@ -1,4 +1,5 @@
 import React from 'react';
+import 'react-native-get-random-values';
 import { TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
