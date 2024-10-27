@@ -1,4 +1,4 @@
-import { PBCell } from './PBCell.entity';
+import {PBCell, PBCellState} from './PBCell.entity';
 
 export class Pillbox {
   private static instance: Pillbox;
@@ -14,7 +14,7 @@ export class Pillbox {
     this.cells = [];
     this.createdAt = new Date();
     this.updatedAt = new Date();
-    this.initCells(); // Initialize the pillbox with cells
+    this.initCells();
   }
 
   public static getInstance(rows: number, cols: number): Pillbox {
@@ -24,7 +24,6 @@ export class Pillbox {
     return Pillbox.instance;
   }
 
-  // Initialize the cells based on rows and columns
   private initCells() {
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
@@ -33,7 +32,6 @@ export class Pillbox {
     }
   }
 
-  // Update the pillbox layout (e.g., if rows or cols change)
   public updatePillbox(rows: number, cols: number) {
     this.rows = rows;
     this.cols = cols;
@@ -42,8 +40,27 @@ export class Pillbox {
     this.updatedAt = new Date();
   }
 
-  // Get a cell by its row and column
   public getCell(row: number, col: number): PBCell | null {
-    return this.cells.find(cell => cell.position.row === row && cell.position.col === col) || null;
+    return this.cells.find(
+      (cell) => cell.position.row === row && cell.position.col === col
+    ) || null;
+  }
+
+  public assignMedicationToCell(medicationId: string, cellId: string) {
+    const cell = this.cells.find((cell) => cell.id === cellId);
+    if (cell) {
+      cell.medicationId = medicationId;
+      cell.state = PBCellState.Filled;
+      this.updatedAt = new Date();
+    }
+  }
+
+  public unassignMedicationFromCell(cellId: string) {
+    const cell = this.cells.find((cell) => cell.id === cellId);
+    if (cell) {
+      cell.medicationId = null;
+      cell.state = PBCellState.NotUsed;
+      this.updatedAt = new Date();
+    }
   }
 }
