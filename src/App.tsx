@@ -7,10 +7,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { LanguageProvider } from './context/LanguageContext.tsx';
 import SettingsScreen from './components/SettingsScreen.tsx';
-import { MainScreen } from './components/MainScreen/MainScreen';
-import { PillboxConfigScreen } from './components/PillboxConfigScreen/PillboxConfigScreen'; // Import Pillbox screen
+import {MainScreen, MainScreenName} from './components/MainScreen/MainScreen';
+import {PillboxConfigScreen, PillboxConfigScreenName} from './components/PillboxConfigScreen/PillboxConfigScreen'; // Import Pillbox screen
 import { SidePanel } from './components/Drawer/SidePanel';
 import {PillboxProvider} from './context/PillboxContext.tsx';
+import {
+  MedicationListScreen,
+  MedicationListScreenName,
+} from './components/MedicationListScreen/MedicationListScreen.tsx';
+import {MedicationProvider} from './context/MedicationContext.tsx';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -20,10 +25,10 @@ function AppStack({ navigation }) {
     <Stack.Navigator>
       {/* Main screen */}
       <Stack.Screen
-        name="Main"
+        name={MainScreenName}
         component={MainScreen}
         options={{
-          title: 'MediApp',
+          // Removed 'title' here
           headerStyle: {
             backgroundColor: '#001f3f',
           },
@@ -41,10 +46,26 @@ function AppStack({ navigation }) {
 
       {/* PillboxConfigScreen */}
       <Stack.Screen
-        name="PillboxConfigScreen"
+        name={PillboxConfigScreenName}
         component={PillboxConfigScreen}
         options={{
-          title: 'Pillbox Configuration',
+          // Removed 'title' here
+          headerStyle: {
+            backgroundColor: '#001f3f',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
+
+      {/* MedicationListScreen */}
+      <Stack.Screen
+        name={MedicationListScreenName}
+        component={MedicationListScreen}
+        options={{
+          // Removed 'title' here
           headerStyle: {
             backgroundColor: '#001f3f',
           },
@@ -57,6 +78,7 @@ function AppStack({ navigation }) {
     </Stack.Navigator>
   );
 }
+
 
 function DrawerScreen() {
   return (
@@ -76,9 +98,11 @@ export default function App() {
   return (
     <LanguageProvider>
       <PillboxProvider>
-        <NavigationContainer>
-         <DrawerScreen />
-        </NavigationContainer>
+        <MedicationProvider>
+          <NavigationContainer>
+            <DrawerScreen />
+          </NavigationContainer>
+        </MedicationProvider>
       </PillboxProvider>
     </LanguageProvider>
   );

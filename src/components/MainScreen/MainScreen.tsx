@@ -5,14 +5,15 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import {useBluetooth} from '../../BluetoothManager.ts';
 import {styles} from './MainScreenStyles.ts';
 import DeviceSelectionModal from '../DeviceSelectionModal/DeviceSelectionModal.tsx';
-import { pillboxConfigScreenName } from '../PillboxConfigScreen/PillboxConfigScreen.tsx';
+import { PillboxConfigScreenName } from '../PillboxConfigScreen/PillboxConfigScreen.tsx';
 import { PillboxPreview } from '../PillboxPreview/PillboxPreview'; // Import PillboxPreview
 import { Pillbox } from '../../entities/Pillbox.entity';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {PillboxContext} from '../../context/PillboxContext.tsx'; // Assuming the pillbox structure is imported
+import {PillboxContext} from '../../context/PillboxContext.tsx';
+import {MedicationListScreenName} from '../MedicationListScreen/MedicationListScreen.tsx';
 
 export function MainScreen({ navigation }) {
-  const {translations} = useLanguage();
+  const { translations } = useLanguage();
   const {
     scanForDevices,
     isScanning,
@@ -30,6 +31,12 @@ export function MainScreen({ navigation }) {
     SplashScreen.hide();
   }, []);
 
+  useEffect(() => {
+    navigation.setOptions({
+      title: translations.mediApp,
+    });
+  }, [navigation, translations]);
+
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -42,7 +49,7 @@ export function MainScreen({ navigation }) {
 
         <TouchableOpacity
           style={styles.fitContentButton}
-          onPress={() => navigation.navigate(pillboxConfigScreenName)}
+          onPress={() => navigation.navigate(PillboxConfigScreenName)}
         >
           <Text style={styles.buttonText}>{translations.pillboxSettings}</Text>
         </TouchableOpacity>
@@ -51,7 +58,10 @@ export function MainScreen({ navigation }) {
       <View style={styles.card}>
         <Text style={styles.cardTitle}>{translations.medication}</Text>
         <Text style={styles.placeholderText}>{translations.disconnected}</Text>
-        <TouchableOpacity disabled style={[styles.fitContentButton, styles.disabledButton]}>
+        <TouchableOpacity
+          style={styles.fitContentButton}
+          onPress={() => navigation.navigate(MedicationListScreenName)}
+        >
           <Text style={styles.buttonText}>{translations.editMedication}</Text>
         </TouchableOpacity>
       </View>
@@ -99,3 +109,5 @@ export function MainScreen({ navigation }) {
     </View>
   );
 }
+
+export const MainScreenName = 'MainScreen';
