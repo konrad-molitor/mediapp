@@ -1,21 +1,23 @@
-import { Medication } from "./Medication.entity";
+import { v4 as uuidv4 } from 'uuid';
 
 export class PBCell {
+  id: string;
   position: { row: number; col: number; rowLabel: string; colLabel: string };
   label: string;
-  medication: Medication | null;
+  medicationId: string | null;
   state: PBCellState;
 
   constructor(row: number, col: number) {
+    this.id = uuidv4();
     this.position = {
       row,
       col,
-      rowLabel: String.fromCharCode(65 + row), // Converts row number to letter (A-Z)
-      colLabel: (col + 1).toString(), // Column numbers start from 1
+      rowLabel: String.fromCharCode(65 + row),
+      colLabel: (col + 1).toString(),
     };
-    this.label = `${this.position.rowLabel}${this.position.colLabel}`; // E.g. A1, B3
-    this.medication = null;
-    this.state = PBCellState.NotUsed; // Default state
+    this.label = `${this.position.rowLabel}${this.position.colLabel}`;
+    this.medicationId = null;
+    this.state = PBCellState.NotUsed;
   }
 }
 
