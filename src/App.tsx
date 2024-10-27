@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import 'react-native-get-random-values';
 import { TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -6,17 +6,22 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { LanguageProvider } from './context/LanguageContext.tsx';
-import SettingsScreen from './components/SettingsScreen.tsx';
-import {MainScreen, MainScreenName} from './components/MainScreen/MainScreen';
-import {PillboxConfigScreen, PillboxConfigScreenName} from './components/PillboxConfigScreen/PillboxConfigScreen'; // Import Pillbox screen
+import { LanguageProvider } from './context/LanguageContext';
+import SettingsScreen from './components/SettingsScreen';
+import { MainScreen, MainScreenName } from './components/MainScreen/MainScreen';
+import {
+  PillboxConfigScreen,
+  PillboxConfigScreenName,
+} from './components/PillboxConfigScreen/PillboxConfigScreen';
 import { SidePanel } from './components/Drawer/SidePanel';
-import {PillboxProvider} from './context/PillboxContext.tsx';
+import { PillboxProvider, PillboxContext } from './context/PillboxContext';
 import {
   MedicationListScreen,
   MedicationListScreenName,
-} from './components/MedicationListScreen/MedicationListScreen.tsx';
-import {MedicationProvider} from './context/MedicationContext.tsx';
+} from './components/MedicationListScreen/MedicationListScreen';
+import { MedicationProvider, MedicationContext } from './context/MedicationContext';
+import { useNotificationScheduler } from './hooks/useNotificationScheduler'; // Custom hook for scheduling notifications
+import { useNotificationHandler } from './hooks/useNotificationHandler'; // Custom hook for handling notifications
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -29,7 +34,6 @@ function AppStack({ navigation }) {
         name={MainScreenName}
         component={MainScreen}
         options={{
-          // Removed 'title' here
           headerStyle: {
             backgroundColor: '#001f3f',
           },
@@ -38,7 +42,10 @@ function AppStack({ navigation }) {
             fontWeight: 'bold',
           },
           headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ paddingLeft: 15 }}>
+            <TouchableOpacity
+              onPress={() => navigation.toggleDrawer()}
+              style={{ paddingLeft: 15 }}
+            >
               <FontAwesomeIcon icon={faBars} size={20} color="#fff" />
             </TouchableOpacity>
           ),
@@ -50,7 +57,6 @@ function AppStack({ navigation }) {
         name={PillboxConfigScreenName}
         component={PillboxConfigScreen}
         options={{
-          // Removed 'title' here
           headerStyle: {
             backgroundColor: '#001f3f',
           },
@@ -66,7 +72,6 @@ function AppStack({ navigation }) {
         name={MedicationListScreenName}
         component={MedicationListScreen}
         options={{
-          // Removed 'title' here
           headerStyle: {
             backgroundColor: '#001f3f',
           },
@@ -79,7 +84,6 @@ function AppStack({ navigation }) {
     </Stack.Navigator>
   );
 }
-
 
 function DrawerScreen() {
   return (
@@ -95,14 +99,29 @@ function DrawerScreen() {
   );
 }
 
+// New AppContent component where we can access contexts
+function AppContent() {
+  // Access contexts
+  const { pillbox } = useContext(PillboxContext);
+  const { medications } = useContext(MedicationContext);
+
+  // Use custom hooks
+  useNotificationScheduler(medications, pillbox);
+  useNotificationHandler(); // Handles notification actions
+
+  return (
+    <NavigationContainer>
+      <DrawerScreen />
+    </NavigationContainer>
+  );
+}
+
 export default function App() {
   return (
     <LanguageProvider>
       <PillboxProvider>
         <MedicationProvider>
-          <NavigationContainer>
-            <DrawerScreen />
-          </NavigationContainer>
+          <AppContent />
         </MedicationProvider>
       </PillboxProvider>
     </LanguageProvider>
