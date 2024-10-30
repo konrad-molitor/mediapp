@@ -1,7 +1,7 @@
 import {useLanguage} from '../../context/LanguageContext.tsx';
 import React, {useContext, useEffect, useState} from 'react';
 import SplashScreen from 'react-native-splash-screen';
-import {Animated, Dimensions, Text, TouchableOpacity, View} from 'react-native';
+import {Animated, Dimensions, PermissionsAndroid, Platform, Text, TouchableOpacity, View} from 'react-native';
 import {styles} from './MainScreenStyles.ts';
 import DeviceSelectionModal from '../DeviceSelectionModal/DeviceSelectionModal.tsx';
 import { PillboxConfigScreenName } from '../PillboxConfigScreen/PillboxConfigScreen.tsx';
@@ -46,6 +46,26 @@ export function MainScreen({ navigation }) {
       title: translations.mediApp,
     });
   }, [navigation, translations]);
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      if (Platform.OS === 'android') {
+        try {
+          const granted = await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          ]);
+
+          console.log('Permissions granted:', granted);
+        } catch (error) {
+          console.error('Failed to request permissions:', error);
+        }
+      }
+    };
+
+    requestPermissions();
+  }, []);
 
   useEffect(() => {
     btEvents.addListener(SERVICE_EVENTS.UPDATE_CONNECTED_DEVICE, () => {
