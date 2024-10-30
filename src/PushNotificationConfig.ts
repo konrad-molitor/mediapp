@@ -1,21 +1,26 @@
-import PushNotification from 'react-native-push-notification';
-import { Platform } from 'react-native';
+import notifee, {AndroidImportance, AuthorizationStatus} from '@notifee/react-native';
 
-// Configure PushNotification
-PushNotification.configure({
-  popInitialNotification: true,
+async function requestNotificationPermission() {
+  const settings = await notifee.requestPermission();
 
-  requestPermissions: Platform.OS === 'ios',
-});
+  if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+    console.log('Notification permissions granted.');
+  } else {
+    console.log('Notification permissions not granted.');
+  }
+}
 
-// Create notification channels for Android
-PushNotification.createChannel(
-  {
-    channelId: 'medication-reminders', // (required)
-    channelName: 'Medication Reminders', // (required)
-    channelDescription: 'A channel for medication reminder notifications',
-    importance: 4, // High importance
-    vibrate: true,
-  },
-  (created) => console.log(`Notification channel '${created ? 'created' : 'exists'}`) // (optional) callback
-);
+// Call this function when your app initializes
+requestNotificationPermission();
+
+
+async function createNotificationChannel() {
+  await notifee.createChannel({
+    id: 'medication-reminders',
+    name: 'Medication Reminders',
+    importance: AndroidImportance.HIGH,
+  });
+}
+
+// Call this function when your app initializes
+createNotificationChannel();

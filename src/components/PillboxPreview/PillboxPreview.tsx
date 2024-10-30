@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, LayoutChangeEvent } from 'react-native';
 import { styles } from './PillboxPreviewStyles';
 import { Pillbox } from '../../entities/Pillbox.entity';
-import { PBCell } from '../../entities/PBCell.entity';
+import {PBCell, PBCellState} from '../../entities/PBCell.entity';
 
 // Define an enum for the cell colors
-enum CellColors {
-  Filled = '#28a745',
-  ToBeTakenNow = '#ffc107',
-  Taken = '#17a2b8',
-  Skipped = '#ff6f61',
-  Overdue = '#dc3545',
-  NotUsed = '#ccc',
-}
+export const CellColors: Record<PBCellState, string> = {
+  [PBCellState.Filled]: '#28a745',        // Green
+  [PBCellState.ToBeTakenNow]: '#ffc107',  // Yellow
+  [PBCellState.Taken]: '#17a2b8',         // Teal
+  [PBCellState.Skipped]: '#ff6f61',       // Salmon
+  [PBCellState.Overdue]: '#dc3545',       // Red
+  [PBCellState.NotUsed]: '#ccc',          // Light Gray
+};
 
 interface PillboxPreviewProps {
   pillbox: Pillbox | null;

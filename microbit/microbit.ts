@@ -11,38 +11,47 @@ bluetooth.onUartDataReceived(serial.delimiters(Delimiters.NewLine), function () 
     // For test_string, show the checkmark and beep once
     basic.showIcon(IconNames.Yes);
     music.playTone(262, music.beat(BeatFraction.Quarter)); // Beep once
+  } else if (incoming === "stop") {
+    stopAlert();
   } else {
     // Stop any ongoing alert when a new message arrives
     stopAlert();
 
-    // Display the incoming message
-    basic.showString(incoming);
-
     // Start the alert process
     isAlerting = true;
-    startAlerting();
+    startAlerting(incoming);
   }
 });
 
 input.onButtonPressed(Button.A, function () {
   stopAlert(); // Stop alerting when Button A is pressed
   basic.clearScreen(); // Clear the display
+  bluetooth.uartWriteString("A"); // Send an acknowledgment
 });
 
 input.onButtonPressed(Button.B, function () {
   stopAlert(); // Stop alerting when Button B is pressed
   basic.clearScreen(); // Clear the display
+  bluetooth.uartWriteString("B"); // Send an acknowledgment
 });
 
-function startAlerting() {
+function startAlerting(message: string) {
   volume = 128; // Reset volume to the initial level
   music.setVolume(volume);
+  // Display the incoming message
+  basic.clearScreen();
+  basic.showString(message);
+
+  music.startMelody(music.builtInMelody(Melodies.Ringtone), MelodyOptions.Forever);
 
   // Beep immediately and then start the alert loop
   beepAndIncreaseVolume();
 
   // Use control.IntervalMode.Interval for repeated intervals
   alertInterval = control.setInterval(function () {
+    // Display the incoming message
+    basic.clearScreen();
+    basic.showString(message);
     beepAndIncreaseVolume();
   }, 10000, control.IntervalMode.Interval); // 10 seconds interval
 }
@@ -50,7 +59,6 @@ function startAlerting() {
 function beepAndIncreaseVolume() {
   if (!isAlerting) return; // Exit if alerting was stopped
 
-  music.playTone(262, music.beat(BeatFraction.Quarter)); // Beep
   if (volume < 255) { // Max volume is 255
     volume += 32; // Gradually increase volume
     music.setVolume(volume);
@@ -58,6 +66,7 @@ function beepAndIncreaseVolume() {
 }
 
 function stopAlert() {
+  music.stopAllSounds();
   if (isAlerting) {
     isAlerting = false;
     control.clearInterval(alertInterval, control.IntervalMode.Interval); // Clear the interval with mode

@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <application
             android:name=".MainApplication"
@@ -31,6 +33,17 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+
+        <activity
+                android:name=".FullScreenNotificationActivity"
+                android:exported="true"
+                android:showWhenLocked="true"
+                android:turnScreenOn="true"
+                android:excludeFromRecents="true"
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+                android:screenOrientation="portrait">
         </activity>
 
         <!-- Push Notification Configuration -->

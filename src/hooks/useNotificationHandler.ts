@@ -1,99 +1,77 @@
-import { useEffect, useContext } from 'react';
-import PushNotification from 'react-native-push-notification';
-import { PillboxContext } from '../context/PillboxContext';
-import { MedicationContext } from '../context/MedicationContext';
-import {PBCell, PBCellState} from '../entities/PBCell.entity';
-import { sendMessageToMicrobit } from '../BluetoothService';
-import {Pillbox} from '../entities/Pillbox.entity.ts'; // You'll need to implement this
+import {useContext, useEffect} from 'react';
+import notifee, {EventType} from '@notifee/react-native';
+import {PillboxContext} from '../context/PillboxContext.tsx';
+import {MedicationContext} from '../context/MedicationContext.tsx';
+import {FullScreenNotificationData} from '../components/FullScreenNotification/FullScreenNotification.tsx';
+import {NativeModules} from 'react-native';
+import {PBCellState} from '../entities/PBCell.entity.ts';
+import {rescheduleMedicationNotification} from '../NotificationService.ts';
+const {FullScreenModule} = NativeModules;
 
 export const useNotificationHandler = () => {
-  const { pillbox, setPillbox } = useContext(PillboxContext);
-  const { medications } = useContext(MedicationContext);
+  const {pillbox, setPillbox} = useContext(PillboxContext);
+  const {medications, setMedications} = useContext(MedicationContext);
 
   useEffect(() => {
-    // Configure PushNotification to handle actions
-    PushNotification.configure({
-      onNotification: function (notification) {
-        console.log('Notification received:', notification);
+    const unsubscribe = notifee.onForegroundEvent(async ({type, detail}) => {
+      if (type === EventType.ACTION_PRESS) {
+        const {pressAction, notification} = detail;
+        const notificationId = notification?.id;
+        const data = notification?.data as FullScreenNotificationData;
 
-        // Process the notification action
-        handleNotificationAction(notification);
-      },
-      // ... other configurations
+        if (!data || !notificationId || !pressAction) {
+          return;
+        }
+
+        if (pressAction.id === 'take') {
+          await handleMedicationTaken(data);
+          await notifee.cancelNotification(notificationId);
+        } else if (pressAction.id === 'snooze') {
+          await handleMedicationSnooze(data);
+        }
+      }
     });
+
+    return () => {
+      unsubscribe();
+    };
   }, [pillbox, medications]);
 
-  const handleNotificationAction = (notification: any) => {
-    const action = notification.action;
-    const medicationId = notification.userInfo?.medicationId;
-    const notificationId = notification.userInfo?.notificationId;
+  const handleMedicationTaken = async (data: FullScreenNotificationData) => {
+    if (data && pillbox) {
+      pillbox.markCellAs(data.medicationId, PBCellState.Taken);
+      setPillbox(pillbox); // Trigger re-render if necessary
 
-    if (!medicationId) {
-      console.warn('Medication ID not found in notification userInfo');
-      return;
-    }
+      FullScreenModule.closeFullScreenNotification();
 
-    if (action === 'Take') {
-      handleMedicationTaken(medicationId);
-    } else if (action === 'Snooze') {
-      handleMedicationSnooze(medicationId, notificationId);
     } else {
-      // Default action
+      console.warn('Notification data or Pillbox context is missing.');
     }
   };
 
-  const handleMedicationTaken = (medicationId: string) => {
-    if (pillbox) {
-      // Update cell states
-      const updatedCells = pillbox.cells.map((cell) => {
-        if (cell.medicationId === medicationId && cell.state !== PBCellState.Taken) {
-          return new PBCell(
-            cell.position.row,
-            cell.position.col,
-            cell.id,
-            cell.medicationId,
-            PBCellState.Taken
-          );
-        } else {
-          return cell;
-        }
-      });
+  // Handle "Snooze" action
+  const handleMedicationSnooze = async (data: FullScreenNotificationData) => {
+    if (data && pillbox) {
+      const {snoozeCount, medicationId} = data;
 
-      const updatedPillbox = new Pillbox(
-        pillbox.rows,
-        pillbox.cols,
-        updatedCells,
-        pillbox.createdAt,
-        new Date()
-      );
+      if (snoozeCount >= 2) {
+        pillbox.markCellAs(medicationId, PBCellState.Overdue);
+        setPillbox(pillbox);
+      } else {
+        // Increment snoozeCount and reschedule the notification
+        const updatedData: FullScreenNotificationData = {
+          ...data,
+          snoozeCount: snoozeCount + 1,
+        };
 
-      setPillbox(updatedPillbox);
+        await rescheduleMedicationNotification(updatedData);
+      }
+
+      await notifee.cancelNotification(data.notificationId);
+
+      FullScreenModule.closeFullScreenNotification();
+    } else {
+      console.warn('Notification data or Pillbox context is missing.');
     }
-
-    // Cancel the notification
-    PushNotification.cancelLocalNotifications({ id: medicationId });
-
-    // Send confirmation to micro:bit
-    sendMessageToMicrobit(`TAKEN:${medicationId}`);
-  };
-
-  const handleMedicationSnooze = (medicationId: string, notificationId: string) => {
-    // Implement snooze logic (e.g., manage snooze counts)
-    // Reschedule the notification after 5 minutes
-    PushNotification.localNotificationSchedule({
-      id: notificationId,
-      message: `Reminder to take your medication: ${getMedicationName(medicationId)}`,
-      date: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes later
-      channelId: 'medication-reminders',
-      // ... other options
-    });
-
-    // Optionally, send snooze command to micro:bit
-    sendMessageToMicrobit(`SNOOZE:${medicationId}`);
-  };
-
-  const getMedicationName = (medicationId: string): string => {
-    const medication = medications.find((med) => med.id === medicationId);
-    return medication ? medication.name : 'Medication';
   };
 };

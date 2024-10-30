@@ -27,7 +27,6 @@ export const PillboxProvider: React.FC = ({ children }) => {
           setPillbox(loadedPillbox);
         }
       } catch (error) {
-        console.error('Failed to load pillbox from storage:', error);
       }
     };
 

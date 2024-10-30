@@ -43,6 +43,11 @@ export const translations = {
     assignCellsTo: 'Assign Cells to',
     assignedCells: 'Assigned Cells',
     noCellsAssigned: 'No cells assigned',
+    notificationTitle: 'Time to take {medicationName}',
+    notificationBody: 'Please take your medication.',
+    take: 'Take',
+    snooze: 'Snooze',
+    noAsssignedMedications: 'No medications assigned to this pillbox.',
   },
   es: {
     pillbox: 'Pastillero',
@@ -55,7 +60,6 @@ export const translations = {
     connected: 'Conectado',
     testConnection: 'Probar conexión',
     connect: 'Conectar',
-    // New translations
     addMedication: 'Añadir medicamento',
     cancel: 'Cancelar',
     edit: 'Editar',
@@ -88,6 +92,11 @@ export const translations = {
     assignCellsTo: 'Asignar celdas a',
     assignedCells: 'Celdas asignadas',
     noCellsAssigned: 'No hay celdas asignadas',
+    notificationTitle: 'Hora de tomar {medicationName} de {pillboxCell}',
+    notificationBody: 'Por favor, tome su medicamento.',
+    take: 'Tomar',
+    snooze: 'Posponer',
+    noAsssignedMedications: 'No hay medicamentos asignados a este pastillero.',
   },
   ru: {
     pillbox: 'Аптечка',
@@ -100,7 +109,6 @@ export const translations = {
     connected: 'Подключено',
     testConnection: 'Проверить соединение',
     connect: 'Подключить',
-    // New translations
     addMedication: 'Добавить лекарство',
     cancel: 'Отмена',
     edit: 'Редактировать',
@@ -133,5 +141,10 @@ export const translations = {
     assignCellsTo: 'Назначить ячейки для',
     assignedCells: 'Назначенные ячейки',
     noCellsAssigned: 'Нет назначенных ячеек',
+    notificationTitle: 'Время принять {medicationName} из {pillboxCell}',
+    notificationBody: 'Пожалуйста, примите ваше лекарство.',
+    take: 'Принять',
+    snooze: 'Отложить',
+    noAsssignedMedications: 'Нет лекарств, назначенных для этой аптечки.',
   },
 };

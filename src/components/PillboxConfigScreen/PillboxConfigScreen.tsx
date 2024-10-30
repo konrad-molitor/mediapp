@@ -72,9 +72,8 @@ export function PillboxConfigScreen({ navigation }) {
 
     try {
       const pdfPath = await createPdfAndShare(pillbox);
-      console.log('PDF saved at:', pdfPath);
     } catch (error) {
-      console.error('Failed to download PDF:', error);
+      console.error('Error generating PDF:', error);
     }
   };
 
