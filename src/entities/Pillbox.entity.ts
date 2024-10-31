@@ -97,4 +97,22 @@ export class Pillbox {
       updatedProperties?.updatedAt || this.updatedAt
     );
   }
+
+  public getNextCellForMedication(medicationId: string): PBCell | null {
+    return this.cells.find(
+      (cell) => cell.medicationId === medicationId && cell.state === PBCellState.Filled
+    ) || null;
+  }
+
+  public markCellAs(cellId: string, state: PBCellState) {
+    const cell = this.cells.find((cell) => cell.id === cellId);
+    if (cell) {
+      cell.state = state;
+      this.updatedAt = new Date();
+    }
+  }
+
+  public getToBeTakenNowCell(): PBCell | undefined {
+    return this.cells.find((cell) => cell.state === PBCellState.ToBeTakenNow);
+  }
 }

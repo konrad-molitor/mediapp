@@ -52,13 +52,10 @@ export async function createPdfAndShare(pillbox: Pillbox): Promise<void> {
   } catch (error) {
     // Handle user canceling the share dialog or other errors
     if (error && error.message && error.message.includes('User did not share')) {
-      console.log('User canceled sharing');
     } else {
-      console.error('Error sharing PDF:', error);
       Alert.alert('Error', 'Unable to share the PDF file.');
     }
   } finally {
     // Ensure app state is reset after share attempt
-    console.log('Share process completed');
   }
 }

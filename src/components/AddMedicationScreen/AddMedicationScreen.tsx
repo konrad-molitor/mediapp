@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+// src/components/AddMedicationScreen.tsx
+
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -47,6 +49,10 @@ export default function AddMedicationScreen({
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const { language, translations } = useLanguage();
+
+  // Refs for double-tap detection
+  const lastTapRef = useRef<number>(0);
+  const DOUBLE_TAP_DELAY = 300; // milliseconds
 
   useEffect(() => {
     if (visible) {
@@ -156,6 +162,34 @@ export default function AddMedicationScreen({
   const timesToDisplay =
     timeType === MedicationTimeType.ByTime ? byTimeTimes : everyNDaysTimes;
 
+  // Double-tap handler
+  const handleTimesDoubleTap = () => {
+    const now = Date.now();
+    const lastTap = lastTapRef.current;
+
+    if (now - lastTap < DOUBLE_TAP_DELAY) {
+      // Double-tap detected
+      addTwoTestTimes();
+      lastTapRef.current = 0; // Reset lastTap
+    } else {
+      lastTapRef.current = now;
+    }
+  };
+
+  const addTwoTestTimes = () => {
+    const now = new Date();
+    const firstTime = new Date(now.getTime() + 1 * 30 * 1000); // +0.5 minute
+    const secondTime = new Date(now.getTime() + 1 * 60 * 1000); // 1 minutes
+
+    if (timeType === MedicationTimeType.ByTime) {
+      setByTimeTimes([...byTimeTimes, firstTime, secondTime]);
+      console.log('Added two test times to ByTime:', firstTime, secondTime);
+    } else {
+      setEveryNDaysTimes([...everyNDaysTimes, firstTime, secondTime]);
+      console.log('Added two test times to EveryNDays:', firstTime, secondTime);
+    }
+  };
+
   return (
     <Modal visible={visible} transparent animationType="slide">
       <View style={styles.modalContainer}>
@@ -216,7 +250,12 @@ export default function AddMedicationScreen({
               </View>
             )}
 
-            <View style={styles.timesContainer}>
+            {/* Modified Times Section with Double-Tap Detection */}
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={handleTimesDoubleTap}
+              style={styles.timesContainer}
+            >
               <Text style={styles.sectionTitle}>{translations.times}</Text>
               {timesToDisplay.map((time, index) => (
                 <View key={index} style={styles.timeItem}>
@@ -233,7 +272,7 @@ export default function AddMedicationScreen({
                   </TouchableOpacity>
                 </View>
               ))}
-            </View>
+            </TouchableOpacity>
           </ScrollView>
 
           {/* Add Time Button */}

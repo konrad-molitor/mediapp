@@ -18,18 +18,16 @@ export const MedicationProvider: React.FC = ({ children }) => {
   useEffect(() => {
     const loadMedications = async () => {
       try {
-        const medicationsData = await AsyncStorage.getItem('medications');
-        if (medicationsData) {
-          const medicationsArray = JSON.parse(medicationsData);
-          const medicationsWithDates = medicationsArray.map((medication) => ({
-            ...medication,
-            times: medication.times.map((time) => new Date(time)),
-            createdAt: new Date(medication.createdAt),
-          }));
-          setMedications(medicationsWithDates);
+        const savedMedications = await AsyncStorage.getItem('medications');
+        if (savedMedications) {
+          const medicationData = JSON.parse(savedMedications);
+          const loadedMeds = medicationData.map((med: any) =>
+            Medication.fromJSON(med)
+          );
+          setMedications(loadedMeds);
+        } else {
         }
       } catch (error) {
-        console.error('Failed to load medications:', error);
       }
     };
 
