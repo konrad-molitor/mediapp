@@ -26,6 +26,7 @@ import FullScreenNotification from './components/FullScreenNotification/FullScre
 import notifee, {AuthorizationStatus} from '@notifee/react-native';
 import BackgroundService from 'react-native-background-actions';
 import {startBackgroundService} from './BackgroundService.ts';
+import {createNotificationChannel} from './NotificationService.ts';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -62,6 +63,7 @@ function AppStack() {
       await startBackgroundService();
     };
 
+    createNotificationChannel();
     startService();
   }, []);
 
