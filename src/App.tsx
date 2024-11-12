@@ -7,7 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { LanguageProvider } from './context/LanguageContext';
-import SettingsScreen from './components/SettingsScreen';
+import SettingsScreen, {SettingsScreenName} from './components/SettingsScreen';
 import { MainScreen, MainScreenName } from './components/MainScreen/MainScreen';
 import {
   PillboxConfigScreen,
@@ -145,7 +145,7 @@ function DrawerScreen() {
       }}
     >
       <Drawer.Screen name="Home" component={AppStack} />
-      <Drawer.Screen name="Settings" component={SettingsScreen} />
+      <Drawer.Screen name={SettingsScreenName} component={SettingsScreen} />
     </Drawer.Navigator>
   );
 }
