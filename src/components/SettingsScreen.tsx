@@ -34,6 +34,7 @@ const SettingsScreen = ({ navigation }) => {
         <Picker.Item label="English" value="en" />
         <Picker.Item label="Español" value="es" />
         <Picker.Item label="Русский" value="ru" />
+        <Picker.Item label="Português" value="pt" />
       </Picker>
     </View>
   );

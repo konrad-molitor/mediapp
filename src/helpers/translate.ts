@@ -3,8 +3,8 @@ import { translations } from '../translations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const getCurrentLanguage = async (): Promise<'en' | 'es' | 'ru'> => {
-  const lang = await AsyncStorage.getItem('language') as 'en' | 'es' | 'ru';
+const getCurrentLanguage = async (): Promise<'en' | 'es' | 'ru' | 'pt'> => {
+  const lang = await AsyncStorage.getItem('appLanguage') as 'en' | 'es' | 'ru' | 'pt';
 
   return lang || 'en';
 };
