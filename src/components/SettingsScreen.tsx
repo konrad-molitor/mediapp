@@ -74,3 +74,5 @@ const styles = StyleSheet.create({
 });
 
 export default SettingsScreen;
+
+export const SettingsScreenName = 'SettingsScreen';
