@@ -8,6 +8,8 @@ import {Medication, MedicationTimeType} from '../../entities/Medication.entity.t
 import {CellColors} from '../PillboxPreview/PillboxPreview.tsx';
 import {format} from 'date-fns';
 import {MedicationContext} from '../../context/MedicationContext.tsx';
+import {translate} from '../../helpers/translate.ts';
+import {translations} from '../../translations.ts';
 
 interface MedicationItemProps {
   medicationName: string;
@@ -15,9 +17,10 @@ interface MedicationItemProps {
   status: PBCellState;
 }
 
-const MedicationItem: React.FC<MedicationItemProps> = ({ medicationName, scheduledTime, status }) => {
+const MedicationItem: React.FC<MedicationItemProps> = ({ medicationName, scheduledTime, status}) => {
   // Format the scheduled time to "DD MMM, HH:mm" in local time
   const formattedTime = format(new Date(scheduledTime), 'dd MMM, HH:mm');
+  const { language } = useLanguage();
 
   return (
     <View style={styles.rowContainer}>
@@ -33,7 +36,7 @@ const MedicationItem: React.FC<MedicationItemProps> = ({ medicationName, schedul
       <View style={styles.medicationDetails}>
         {/* Status Text */}
         <Text style={[styles.statusText, { color: CellColors[status] }]}>
-          {status.split(/(?=[A-Z])/).join(' ')}
+          {translations[language][status]}
         </Text>
 
         {/* Medication Name */}

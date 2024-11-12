@@ -18,6 +18,7 @@ import {rescheduleMedicationNotification} from '../../NotificationService.ts';
 import notifee from '@notifee/react-native';
 import {Pillbox} from '../../entities/Pillbox.entity.ts';
 import {btEvents, SERVICE_EVENTS} from '../../BackgroundService.ts';
+import {translations} from '../../translations.ts';
 
 const {FullScreenModule} = NativeModules;
 
@@ -37,6 +38,7 @@ const FullScreenNotification = () => {
   const [snoozeCount, setSnoozeCount] = useState(0);
   const [pbCell, setPbCell] = useState({} as PBCell | null | undefined);
   const [pillbox, setPillbox] = useState<Pillbox | null>(null);
+  const [language, setLanguage] = useState<'en' | 'es' | 'ru' | 'pt'>('en');
 
   const loadPillbox = async () => {
     try {
@@ -73,6 +75,22 @@ const FullScreenNotification = () => {
       return pillbox?.getToBeTakenNowCell();
     }
   };
+
+  useEffect(() => {
+    const loadLanguage = async () => {
+      try {
+        const savedLanguage = await AsyncStorage.getItem('appLanguage') as 'en' | 'es' | 'ru' | 'pt';
+        if (savedLanguage) {
+          setLanguage(savedLanguage);
+        }
+        console.log('Loaded language:', savedLanguage);
+      } catch (error) {
+        console.error('Failed to load language from storage, falling back to English', error);
+        setLanguage('en');
+      }
+    };
+    loadLanguage();
+  }, []);
 
   useEffect(() => {
     // Load notification data from AsyncStorage
@@ -244,10 +262,10 @@ const FullScreenNotification = () => {
       {/* Buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.takeButton} onPress={handleTake}>
-          <Text style={styles.buttonText}>Take</Text>
+          <Text style={styles.buttonText}>{translations[language].take}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.snoozeButton} onPress={handleSnooze}>
-          <Text style={styles.buttonText}>Snooze</Text>
+          <Text style={styles.buttonText}>{translations[language].snooze}</Text>
         </TouchableOpacity>
       </View>
     </Animated.View>
